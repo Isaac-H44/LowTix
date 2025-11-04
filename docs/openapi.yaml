@@ -1,0 +1,16 @@
+openapi: 3.0.3
+info:
+  title: LowTix API
+  version: 0.1.0
+  description: API for LowTix ticket resale platform
+servers:
+  - url: http://localhost:3001
+paths: {}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
