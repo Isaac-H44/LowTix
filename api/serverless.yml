@@ -1,0 +1,57 @@
+service: lowtix-api
+
+frameworkVersion: '4'
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  memorySize: 512
+  timeout: 30
+
+  httpApi:
+    cors:
+      allowedOrigins:
+        - https://main.d2dbbudndgxplc.amplifyapp.com
+        - http://localhost:5173
+      allowedHeaders:
+        - Content-Type
+        - Authorization
+      allowedMethods:
+        - OPTIONS
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+      allowCredentials: true
+
+  environment:
+    # Name of the secret used by src/lambda.js (SECRETS_ID env in Lambda)
+    # Update this if your secret name changes.
+    SECRETS_ID: LowTix/api/prod
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - secretsmanager:GetSecretValue
+          # AWS secret ARNs include a random suffix, so we wildcard it here
+          Resource: arn:aws:secretsmanager:${self:provider.region}:378743673682:secret:${self:provider.environment.SECRETS_ID}-*
+
+functions:
+  api:
+    handler: src/lambda.handler
+    events:
+      - httpApi:
+          method: ANY
+          path: /{proxy+}
+
+plugins:
+  - serverless-offline
+
+package:
+  # Include the OpenAPI spec alongside the deployment package
+  patterns:
+    - ../docs/LowTix-openapi.yaml

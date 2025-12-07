@@ -11,6 +11,7 @@ import { AccountSettingsPage } from './pages/AccountSettingsPage.jsx';
 import { InventoryIntakePage } from './pages/InventoryIntakePage.jsx';
 import { PricingRulesPage } from './pages/PricingRulesPage.jsx';
 import { EventsManagementPage } from './pages/EventsManagementPage.jsx';
+import { RequireAuth } from './auth/AuthContext.jsx';
 
 export default function App() {
   return (
@@ -24,8 +25,22 @@ export default function App() {
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/feed" element={<FeedPage />} />
-          <Route path="/orders" element={<MyOrdersPage />} />
-          <Route path="/account" element={<AccountSettingsPage />} />
+          <Route
+            path="/orders"
+            element={(
+              <RequireAuth>
+                <MyOrdersPage />
+              </RequireAuth>
+            )}
+          />
+          <Route
+            path="/account"
+            element={(
+              <RequireAuth>
+                <AccountSettingsPage />
+              </RequireAuth>
+            )}
+          />
           <Route path="/admin/inventory" element={<InventoryIntakePage />} />
           <Route path="/admin/pricing-rules" element={<PricingRulesPage />} />
           <Route path="/admin/events" element={<EventsManagementPage />} />

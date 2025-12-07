@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext.jsx';
 
 export function EventDetailsPage() {
   const { eventId } = useParams();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [event, setEvent] = useState(null);
   const [tiers, setTiers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -97,6 +100,37 @@ export function EventDetailsPage() {
               ))}
             </ul>
           )}
+
+          <div className="card-actions" style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
+            <button
+              type="button"
+              className="button"
+              onClick={() => {
+                if (!isAuthenticated) {
+                  navigate('/signin', { state: { from: { pathname: `/events/${eventId}` } } });
+                  return;
+                }
+                // TODO: implement purchase flow against API
+                alert('Purchase flow not yet implemented');
+              }}
+            >
+              Purchase Tickets
+            </button>
+            <button
+              type="button"
+              className="button button-secondary"
+              onClick={() => {
+                if (!isAuthenticated) {
+                  navigate('/signin', { state: { from: { pathname: `/events/${eventId}` } } });
+                  return;
+                }
+                // TODO: implement join-queue flow against API
+                alert('Join queue flow not yet implemented');
+              }}
+            >
+              Join Queue
+            </button>
+          </div>
         </div>
       )}
     </section>
